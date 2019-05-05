@@ -11,12 +11,12 @@ page.search('li.shared-content-block').each do |i|
   info_url = i.at('a')['href']
   record = {
     'council_reference' => info_url.split('/')[-2..-1].join('/'),
-    'address' => i.inner_text.gsub("\r\n", "").squeeze(' ').strip,
-    'description' => i.at('div.truncated-description').next_sibling.inner_text,
+    'address' => i.at('a').inner_text.gsub("\r\n", "").squeeze(' ').strip,
+    'description' => i.at('div.truncated-description').inner_text,
     'info_url' => info_url,
     'comment_url' => 'mailto:mail@vincent.wa.gov.au',
     'date_scraped' => Date.today.to_s,
-    'on_notice_to' => i.at('div.truncated-description > p').inner_text
+    'on_notice_to' => i.at('div.truncated-description').inner_text
   }
   puts "Saving record " + record['council_reference'] + ", " + record['address']
   ScraperWiki.save_sqlite(['council_reference'], record)
