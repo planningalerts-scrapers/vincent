@@ -23,7 +23,7 @@ loop do
       'info_url' => info_url,
       'comment_url' => 'mailto:mail@vincent.wa.gov.au',
       'date_scraped' => Date.today.to_s,
-      'on_notice_to' => li.at('div.truncated-description > strong').inner_text.gsub("\r\n", "").squeeze(' ').strip
+      'on_notice_to' => li.search('div.truncated-description > p > b')[1].inner_text.gsub("\r\n", "").squeeze(' ').strip
     }
     puts "Saving page #{page_number} application #{application_count} record."
     puts "  council_reference: " + record['council_reference']
