@@ -9,7 +9,7 @@ loop do
   page_number += 1
   page = agent.get("#{url}#{page_number}")
 
-  puts "Parsing the results on page #{page_number}."
+  puts "Parsing the results on page #{page_number}: #{url}#{page_number}"
   application_count = 0
   page.search('li.shared-content-block').each do |li|
     application_count += 1
@@ -21,9 +21,9 @@ loop do
       'info_url' => info_url,
       'comment_url' => 'mailto:mail@vincent.wa.gov.au',
       'date_scraped' => Date.today.to_s,
-      'on_notice_to' => li.at('div.truncated-description').inner_text
+      'on_notice_to' => li.at('div.truncated-description').inner_text.gsub("\r\n", "").squeeze(' ').strip
     }
-    puts "Saving record."
+    puts "Saving page #{page_number} application #{application_count} record."
     puts "  council_reference: " + record['council_reference']
     puts "            address: " + record['address']
     puts "        description: " + record['description']
@@ -37,3 +37,4 @@ loop do
   puts "Found #{application_count} application(s) on page #{page_number}."
   break if application_count == 0
 end
+puts "Complete."
