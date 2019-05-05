@@ -5,7 +5,7 @@ url = "https://imagine.vincent.wa.gov.au/planning-consultations?page="
 
 agent = Mechanize.new
 page_number = 1
-page = agent.get("#{url}#{page_number})
+page = agent.get("#{url}#{page_number}")
 page.search('li.shared-content-block').each do |i|  
   puts "Parsing the results on page #{page_number}"
   info_url = i.at('a')['href']
@@ -20,5 +20,5 @@ page.search('li.shared-content-block').each do |i|
   }
   puts "Saving record " + record['council_reference'] + ", " + record['address']
   ScraperWiki.save_sqlite(['council_reference'], record)
-  page_number += 1
 end
+page_number += 1
