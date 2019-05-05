@@ -16,10 +16,6 @@ page.search('.listitemrow').each do |i|
     'date_scraped' => Date.today.to_s,
     'on_notice_to' => i.at('.listitemtext > b').next_sibling.inner_text.split('/').reverse.join('-')
   }
-  if (ScraperWiki.select("* from data where `council_reference`='#{record['council_reference']}'").empty? rescue true)
-    ScraperWiki.save_sqlite(['council_reference'], record)
-  else
-    puts "Skipping already saved record " + record['council_reference']
-  end
+  puts "Saving record " + record['council_reference'] + ", " + record['address']
+  ScraperWiki.save_sqlite(['council_reference'], record)
 end
-
