@@ -14,14 +14,16 @@ loop do
   page.search('li.shared-content-block').each do |li|
     application_count += 1
     info_url = li.at('a')['href']
+    details_page = agent.get(info_url)
+    council_reference = details_page.at('div.truncated_description').inner_text.sub(/.*Serial Number:/, '').gsub("\r\n", "").squeeze(' ').strip
     record = {
-      'council_reference' => info_url.split('/')[-2..-1].join('/'),
+      'council_reference' => council_reference,
       'address' => li.at('a').inner_text.gsub("\r\n", "").squeeze(' ').strip,
-      'description' => li.at('div.truncated-description').inner_text,
+      'description' => li.at('div.truncated-description').inner_text.sub(/.*Development Details:/, '').gsub("\r\n", "").squeeze(' ').strip,
       'info_url' => info_url,
       'comment_url' => 'mailto:mail@vincent.wa.gov.au',
       'date_scraped' => Date.today.to_s,
-      'on_notice_to' => li.at('div.truncated-description').inner_text.gsub("\r\n", "").squeeze(' ').strip
+      'on_notice_to' => li.at('div.truncated-description > strong').inner_text.gsub("\r\n", "").squeeze(' ').strip
     }
     puts "Saving page #{page_number} application #{application_count} record."
     puts "  council_reference: " + record['council_reference']
