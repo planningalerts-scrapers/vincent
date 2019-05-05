@@ -15,17 +15,20 @@ loop do
     application_count += 1
     info_url = li.at('a')['href']
     details_page = agent.get(info_url)
+    # Extract all text after "Serial Number:" from the second paragraph under the div which has class "truncated-description".
     council_reference = details_page.search('div.truncated-description p')[1].inner_text.gsub(/[\r\n]/, "").sub(/.*Serial Number:/, '').squeeze(' ').strip
     record = {
       'council_reference' => council_reference,
       'address' => li.at('a').inner_text.gsub("\r\n", "").squeeze(' ').strip,
+      # Extract all text after "Development Details:" under the div which as class "truncated-description".
       'description' => li.at('div.truncated-description').inner_text.gsub(/[\r\n]/, "").sub(/.*Development Details:/, '').squeeze(' ').strip,
       'info_url' => info_url,
       'comment_url' => 'mailto:mail@vincent.wa.gov.au',
       'date_scraped' => Date.today.to_s,
+      # Extract all text from the second <b>...</b> element under the div which has class "truncated-description" (and trim the trailing ".").
       'on_notice_to' => Date.parse(li.search('div.truncated-description b')[1].inner_text.gsub(/[\r\n]/, "").squeeze(' ').strip.gsub(/\.$/, '')).to_s
     }
-    puts "Saving page #{page_number} application #{application_count} record."
+    puts "Saving page #{page_number} application record #{application_count}."
     puts "    council_reference: " + record['council_reference']
     puts "              address: " + record['address']
     puts "          description: " + record['description']
@@ -36,7 +39,8 @@ loop do
     ScraperWiki.save_sqlite(['council_reference'], record)
   end
   
+  # Continue paging until a page is encountered with no applications (or, as a safety precaution, a large number of pages have been processed).
   puts "Found #{application_count} application(s) on page #{page_number}."
-  break if application_count == 0
+  break if application_count == 0 or page_number > 100
 end
 puts "Complete."
