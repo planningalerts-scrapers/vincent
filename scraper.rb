@@ -19,20 +19,20 @@ loop do
     record = {
       'council_reference' => council_reference,
       'address' => li.at('a').inner_text.gsub("\r\n", "").squeeze(' ').strip,
-      'description' => li.at('div.truncated-description').inner_text.sub(/.*Development Details:/, '').gsub("\r\n", "").squeeze(' ').strip,
+      'description' => li.at('div.truncated-description').inner_text.gsub("\r\n", "").sub(/.*Development Details:/, '').squeeze(' ').strip,
       'info_url' => info_url,
       'comment_url' => 'mailto:mail@vincent.wa.gov.au',
       'date_scraped' => Date.today.to_s,
-      'on_notice_to' => li.search('div.truncated-description b')[1].inner_text.gsub("\r\n", "").squeeze(' ').strip.gsub(/\.$/, '')
+      'on_notice_to' => Date.parse(li.search('div.truncated-description b')[1].inner_text.gsub("\r\n", "").squeeze(' ').strip.gsub(/\.$/, '')).to_s
     }
     puts "Saving page #{page_number} application #{application_count} record."
-    puts "  council_reference: " + record['council_reference']
-    puts "            address: " + record['address']
-    puts "        description: " + record['description']
-    puts "           info_url: " + record['info_url']
-    puts "        comment_url: " + record['comment_url']
-    puts "       date_scraped: " + record['date_scraped']
-    puts "       on_notice_to: " + record['on_notice_to']
+    puts "    council_reference: " + record['council_reference']
+    puts "              address: " + record['address']
+    puts "          description: " + record['description']
+    puts "             info_url: " + record['info_url']
+    puts "          comment_url: " + record['comment_url']
+    puts "         date_scraped: " + record['date_scraped']
+    puts "         on_notice_to: " + record['on_notice_to']
     ScraperWiki.save_sqlite(['council_reference'], record)
   end
   
