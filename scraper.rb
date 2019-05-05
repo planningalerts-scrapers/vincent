@@ -1,15 +1,16 @@
 require 'scraperwiki'
 require 'mechanize'
 
-url = "https://imagine.vincent.wa.gov.au/planning-consultations?page="
+url = "https://imagine.vincent.wa.gov.au/planning-consultations"
 
 agent = Mechanize.new
 page_number = 0
 loop do
   page_number += 1
-  page = agent.get("#{url}#{page_number}")
+  page_url = "#{url}?page=#{page_number}"
+  page = agent.get(page_url)
 
-  puts "Parsing the results on page #{page_number}: #{url}#{page_number}"
+  puts "Parsing the results on page #{page_number}: #{page_url}"
   application_count = 0
   page.search('li.shared-content-block').each do |li|
     application_count += 1
