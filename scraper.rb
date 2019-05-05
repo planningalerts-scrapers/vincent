@@ -15,7 +15,7 @@ loop do
     application_count += 1
     info_url = li.at('a')['href']
     details_page = agent.get(info_url)
-    council_reference = details_page.at('div.truncated-description').inner_text.sub(/.*Serial Number:/, '').gsub("\r\n", "").squeeze(' ').strip
+    council_reference = details_page.at('div.truncated-description p')[1].inner_text.sub(/.*Serial Number:/, '').gsub("\r\n", "").squeeze(' ').strip
     record = {
       'council_reference' => council_reference,
       'address' => li.at('a').inner_text.gsub("\r\n", "").squeeze(' ').strip,
@@ -23,7 +23,7 @@ loop do
       'info_url' => info_url,
       'comment_url' => 'mailto:mail@vincent.wa.gov.au',
       'date_scraped' => Date.today.to_s,
-      'on_notice_to' => li.search('div.truncated-description > p > b')[1].inner_text.gsub("\r\n", "").squeeze(' ').strip
+      'on_notice_to' => li.search('div.truncated-description b')[1].inner_text.gsub("\r\n", "").squeeze(' ').strip.gsub(/\.$/, '')
     }
     puts "Saving page #{page_number} application #{application_count} record."
     puts "  council_reference: " + record['council_reference']
