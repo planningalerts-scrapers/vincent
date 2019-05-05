@@ -21,7 +21,7 @@ loop do
     record = {
       'council_reference' => council_reference,
       'address' => li.at('a').inner_text.gsub("\r\n", "").squeeze(' ').strip,
-      # Extract all text after "Development Details:" under the div which as class "truncated-description".
+      # Extract all text after "Development Details:" under the div which has class "truncated-description".
       'description' => li.at('div.truncated-description').inner_text.gsub(/[\r\n]/, "").sub(/.*Development Details:/, '').squeeze(' ').strip,
       'info_url' => info_url,
       'comment_url' => 'mailto:mail@vincent.wa.gov.au',
