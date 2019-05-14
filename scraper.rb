@@ -27,9 +27,9 @@ loop do
     # Extract all text from the second <b>...</b> element under the div which has class "truncated-description" (and trim the trailing ".").
     possible_date_2 = li.search('div.truncated-description b')[1].inner_text.gsub(/[\r\n]/, "").squeeze(' ').strip.gsub(/\.$/, '')
     puts "    Raw date text 1: " + possible_date_1
-    puts "    Raw date text 1: " + possible_date_2
-    matches_1 = possible_date_1.match(/([0-9][0-9]?\w+[A-Z][A-Z][A-Z][A-Z]?\w+[0-9][0-9][0-9][0-9])$/i)
-    matches_2 = possible_date_2.match(/([0-9][0-9]?\w+[A-Z][A-Z][A-Z][A-Z]?\w+[0-9][0-9][0-9][0-9])$/i)
+    puts "    Raw date text 2: " + possible_date_2
+    matches_1 = possible_date_1.scan(/([0-9][0-9]?\w+[A-Z][A-Z][A-Z][A-Z]?\w+[0-9][0-9][0-9][0-9])$/i)
+    matches_2 = possible_date_2.scan(/([0-9][0-9]?\w+[A-Z][A-Z][A-Z][A-Z]?\w+[0-9][0-9][0-9][0-9])$/i)
     parsed_date = ""
     if (!matches_1.nil? and matches_1.length >= 1)
       parsed_date = Date.parse(matches_1[0]).to_s
