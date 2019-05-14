@@ -16,10 +16,26 @@ loop do
     application_count += 1
     info_url = li.at('a')['href']
     details_page = agent.get(info_url)
+    
     # Extract all text after "Serial Number:" from the second paragraph under the div which has class "truncated-description".
     council_reference = details_page.search('div.truncated-description p')[1].inner_text.gsub(/[\r\n]/, "").sub(/.*Serial Number:/, '').squeeze(' ').strip
+    
+    # Attempt to find a date.
     puts "Parsing information for " + council_reference
-    puts "    Raw date text: " + li.search('div.truncated-description b')[1].inner_text.gsub(/[\r\n]/, "").squeeze(' ').strip.gsub(/\.$/, '')
+    # Extract all text from the first <b>...</b> element under the div which has class "truncated-description" (and trim the trailing ".").
+    possible_date_1 = li.search('div.truncated-description b')[0].inner_text.gsub(/[\r\n]/, "").squeeze(' ').strip.gsub(/\.$/, '')
+    # Extract all text from the second <b>...</b> element under the div which has class "truncated-description" (and trim the trailing ".").
+    possible_date_2 = li.search('div.truncated-description b')[1].inner_text.gsub(/[\r\n]/, "").squeeze(' ').strip.gsub(/\.$/, '')
+    puts "    Raw date text 1: " + possible_date_1
+    puts "    Raw date text 1: " + possible_date_2
+    matches_1 = possible_date_1.match(/\b([0-9][0-9]?\w+[A-Z][A-Z][A-Z][A-Z]?\w+[0-9][0-9][0-9][0-9])$/i)
+    matches_2 = possible_date_2.match(/\b([0-9][0-9]?\w+[A-Z][A-Z][A-Z][A-Z]?\w+[0-9][0-9][0-9][0-9])$/i)
+    parsed_date = ""
+    if (matches_1.length >= 1)
+      parsed_date = Date.parse(matches_1[0]).to_s
+    elsif (matches_2.length >= 1)
+      parsed_date = Date.parse(matches_2[0]).to_s
+
     record = {
       'council_reference' => council_reference,
       'address' => li.at('a').inner_text.gsub("\r\n", "").squeeze(' ').strip,
@@ -28,9 +44,9 @@ loop do
       'info_url' => info_url,
       'comment_url' => 'mailto:mail@vincent.wa.gov.au',
       'date_scraped' => Date.today.to_s,
-      # Extract all text from the second <b>...</b> element under the div which has class "truncated-description" (and trim the trailing ".").
-      'on_notice_to' => Date.parse(li.search('div.truncated-description b')[1].inner_text.gsub(/[\r\n]/, "").squeeze(' ').strip.gsub(/\.$/, '')).to_s
+      'on_notice_to' => parsed_date
     }
+      
     puts "Saving page #{page_number} application record #{application_count}."
     puts "    council_reference: " + record['council_reference']
     puts "              address: " + record['address']
