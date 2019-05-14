@@ -28,8 +28,8 @@ loop do
     possible_date_2 = li.search('div.truncated-description b')[1].inner_text.gsub(/[\r\n]/, "").squeeze(' ').strip.gsub(/\.$/, '')
     puts "    Raw date text 1: " + possible_date_1
     puts "    Raw date text 2: " + possible_date_2
-    matches_1 = possible_date_1.scan(/([0-9][0-9]?\w+[A-Z][A-Z][A-Z][A-Z]?\w+[0-9][0-9][0-9][0-9])$/i)
-    matches_2 = possible_date_2.scan(/([0-9][0-9]?\w+[A-Z][A-Z][A-Z][A-Z]?\w+[0-9][0-9][0-9][0-9])$/i)
+    matches_1 = possible_date_1.scan(/\b[0-9][0-9]?\w+[A-Z][A-Z][A-Z][A-Z]?\w+[0-9][0-9][0-9][0-9]$/i)
+    matches_2 = possible_date_2.scan(/\b[0-9][0-9]?\w+[A-Z][A-Z][A-Z][A-Z]?\w+[0-9][0-9][0-9][0-9]$/i)
     puts matches_1
     puts matches_2
     if (matches_1.nil?)
