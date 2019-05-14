@@ -34,9 +34,17 @@ loop do
     puts matches_2
     if (matches_1.nil?)
       puts "matches_1 is nil"
+    else
+      puts "found matches 1"
+      puts matches_1[0]
+      puts matches_1[0][0]
     end
     if (matches_1.nil?)
       puts "matches_2 is nil"
+    else
+      puts "found matches 2"
+      puts matches_2[0]
+      puts matches_2[0][0]
     end
     parsed_date = ""
     if (!matches_1.nil? and matches_1.length >= 1)
