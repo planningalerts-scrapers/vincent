@@ -30,6 +30,8 @@ loop do
     puts "    Raw date text 2: " + possible_date_2
     matches_1 = possible_date_1.scan(/[0-9][0-9]?\w+[A-Z][A-Z][A-Z][A-Z]?\w+[0-9][0-9][0-9][0-9]$/i)
     matches_2 = possible_date_2.scan(/[0-9][0-9]?\w+[A-Z][A-Z][A-Z][A-Z]?\w+[0-9][0-9][0-9][0-9]$/i)
+    puts matches_1
+    puts matches_2
     parsed_date = ""
     if (!matches_1.nil? and matches_1.length >= 1)
       parsed_date = Date.parse(matches_1[0]).to_s
