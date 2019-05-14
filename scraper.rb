@@ -35,7 +35,8 @@ loop do
       parsed_date = Date.parse(matches_1[0]).to_s
     elsif (matches_2.length >= 1)
       parsed_date = Date.parse(matches_2[0]).to_s
-
+    end
+    
     record = {
       'council_reference' => council_reference,
       'address' => li.at('a').inner_text.gsub("\r\n", "").squeeze(' ').strip,
