@@ -18,6 +18,8 @@ loop do
     details_page = agent.get(info_url)
     # Extract all text after "Serial Number:" from the second paragraph under the div which has class "truncated-description".
     council_reference = details_page.search('div.truncated-description p')[1].inner_text.gsub(/[\r\n]/, "").sub(/.*Serial Number:/, '').squeeze(' ').strip
+    puts "Parsing information for " + council_reference
+    puts "    Raw date text: " + li.search('div.truncated-description b')[1].inner_text.gsub(/[\r\n]/, "").squeeze(' ').strip.gsub(/\.$/, '')
     record = {
       'council_reference' => council_reference,
       'address' => li.at('a').inner_text.gsub("\r\n", "").squeeze(' ').strip,
